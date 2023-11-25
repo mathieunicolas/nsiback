@@ -22,7 +22,9 @@ import { ofetch } from 'ofetch';
 import { XMLParser } from 'fast-xml-parser';
 import { PythonShell } from 'python-shell';
 
-const parser = new XMLParser();
+const parser = new XMLParser({
+  transformTagName: (tagName) => tagName.replace(':', '-'),
+});
 
 @Controller()
 export class AppController {
@@ -43,7 +45,6 @@ export class AppController {
       'https://enthdf.fr/cas/serviceValidate?service=https://nsi.rocks&ticket=' +
         ticket,
     );
-    console.log(data);
     return parser.parse(data);
   }
 
@@ -69,6 +70,7 @@ export class AppController {
     response.cookie('jwt', userData.access_token, {
       sameSite: 'none',
       secure: true,
+      domain: 'localhost',
     });
     return userData;
   }
