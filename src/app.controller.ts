@@ -21,6 +21,7 @@ import { User } from './users/user.entity';
 import { ofetch } from 'ofetch';
 import { XMLParser } from 'fast-xml-parser';
 import { PythonShell } from 'python-shell';
+import { JwtAuthGuard } from './auth/jwt-auth-guard';
 
 const parser = new XMLParser({
   transformTagName: (tagName) => tagName.replace(':', '-'),
@@ -39,13 +40,29 @@ export class AppController {
   }
 
   @Get('/ticket')
-  async getCAS(@Query('ticket') ticket: string) {
+  async getCAS(
+    @Query('ticket') ticket: string,
+    @Res({ passthrough: true }) response: Response,
+  ) {
     console.log(ticket);
     const data = await ofetch(
       'https://enthdf.fr/cas/serviceValidate?service=https://nsi.rocks&ticket=' +
         ticket,
     );
-    return parser.parse(data);
+    const jwtCAS = await this.authService.entlogin(parser.parse(data));
+    response.cookie('jwt', jwtCAS.access_token, {
+      sameSite: 'none',
+      secure: true,
+    });
+    return jwtCAS;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/castest')
+  async findAll(@Req() req) {
+    console.log(req.user);
+
+    return req.user;
   }
 
   @Post('python')
@@ -70,7 +87,6 @@ export class AppController {
     response.cookie('jwt', userData.access_token, {
       sameSite: 'none',
       secure: true,
-      domain: 'localhost',
     });
     return userData;
   }

@@ -24,4 +24,15 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+
+  async entlogin(dtCAS) {
+    const tmp = dtCAS['cas-serverResponse']['cas-authenticationSuccess'];
+    const payload = {
+      username: tmp['cas-user'],
+      sub: tmp['cas-userAttributes']['id'],
+    };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
+  }
 }
