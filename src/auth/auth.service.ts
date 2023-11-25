@@ -26,10 +26,11 @@ export class AuthService {
   }
 
   async entlogin(dtCAS) {
-    const tmp = dtCAS['cas-serverResponse']['cas-authenticationSuccess'];
+    console.log(dtCAS);
+    const tmp = dtCAS['cas-serviceResponse']['cas-authenticationSuccess'];
     const payload = {
       username: tmp['cas-user'],
-      sub: tmp['cas-userAttributes']['id'],
+      sub: tmp['cas-attributes']['cas-userAttributes']['id'],
     };
     return {
       access_token: this.jwtService.sign(payload),

@@ -44,7 +44,6 @@ export class AppController {
     @Query('ticket') ticket: string,
     @Res({ passthrough: true }) response: Response,
   ) {
-    console.log(ticket);
     const data = await ofetch(
       'https://enthdf.fr/cas/serviceValidate?service=https://nsi.rocks&ticket=' +
         ticket,
@@ -67,6 +66,17 @@ export class AppController {
 
   @Post('python')
   async runPython(@Body('script') script) {
+    try {
+      const res = await PythonShell.runString(script);
+      return res;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('python')
+  async runPython2(@Body('script') script) {
     try {
       const res = await PythonShell.runString(script);
       return res;
