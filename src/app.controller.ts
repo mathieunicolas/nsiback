@@ -18,6 +18,9 @@ import { ApiParam, ApiTags, PickType } from '@nestjs/swagger';
 import { Response, Request } from 'express';
 import { User } from './users/user.entity';
 import { ofetch } from 'ofetch';
+import { XMLParser } from 'fast-xml-parser';
+
+const parser = new XMLParser();
 
 @Controller()
 export class AppController {
@@ -39,7 +42,7 @@ export class AppController {
         ticket,
     );
     console.log(data);
-    return data;
+    return parser.parse(data);
   }
 
   @ApiTags('login')
