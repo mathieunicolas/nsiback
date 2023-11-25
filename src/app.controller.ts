@@ -7,6 +7,7 @@ import {
   UploadedFile,
   Res,
   Req,
+  Query,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { LocalAuthGuard } from './auth/local-auth-guard';
@@ -16,6 +17,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiParam, ApiTags, PickType } from '@nestjs/swagger';
 import { Response, Request } from 'express';
 import { User } from './users/user.entity';
+import { ofetch } from 'ofetch';
 
 @Controller()
 export class AppController {
@@ -27,6 +29,17 @@ export class AppController {
   @Get()
   hello() {
     return 'hello world !';
+  }
+
+  @Get('/ticket')
+  async getCAS(@Query('ticket') ticket: string) {
+    console.log(ticket);
+    const data = await ofetch(
+      'https://enthdf.fr/cas/serviceValidate?service=https://nsi.rocks&ticket=' +
+        ticket,
+    );
+    console.log(data);
+    return data;
   }
 
   @ApiTags('login')
