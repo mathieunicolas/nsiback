@@ -8,6 +8,7 @@ import {
   Res,
   Req,
   Query,
+  Body,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { LocalAuthGuard } from './auth/local-auth-guard';
@@ -19,6 +20,7 @@ import { Response, Request } from 'express';
 import { User } from './users/user.entity';
 import { ofetch } from 'ofetch';
 import { XMLParser } from 'fast-xml-parser';
+import { PythonShell } from 'python-shell';
 
 const parser = new XMLParser();
 
@@ -43,6 +45,16 @@ export class AppController {
     );
     console.log(data);
     return parser.parse(data);
+  }
+
+  @Post('python')
+  async runPython(@Body('script') script) {
+    try {
+      const res = await PythonShell.runString(script);
+      return res;
+    } catch (error) {
+      return error;
+    }
   }
 
   @ApiTags('login')
