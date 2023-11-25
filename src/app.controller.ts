@@ -75,7 +75,7 @@ export class AppController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('python')
+  @Post('python2')
   async runPython2(@Body('script') script) {
     try {
       const res = await PythonShell.runString(script);
