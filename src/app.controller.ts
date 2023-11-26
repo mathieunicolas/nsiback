@@ -97,6 +97,7 @@ export class AppController {
     response.cookie('jwt', userData.access_token, {
       sameSite: 'none',
       secure: true,
+      domain: 'nicolas.zone',
     });
     return userData;
   }
