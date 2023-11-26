@@ -3,21 +3,15 @@ import {
   Get,
   Post,
   UseGuards,
-  UseInterceptors,
-  UploadedFile,
   Res,
   Req,
   Query,
   Body,
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import { LocalAuthGuard } from './auth/local-auth-guard';
 import { AuthService } from './auth/auth.service';
-import { Storage } from '@squareboat/nest-storage';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiParam, ApiTags, PickType } from '@nestjs/swagger';
 import { Response, Request } from 'express';
-import { User } from './users/user.entity';
 import { ofetch } from 'ofetch';
 import { XMLParser } from 'fast-xml-parser';
 import { PythonShell } from 'python-shell';
@@ -52,6 +46,7 @@ export class AppController {
     response.cookie('jwt', jwtCAS.access_token, {
       sameSite: 'none',
       secure: true,
+      domain: 'nsi.rocks',
     });
     return jwtCAS;
   }
@@ -83,33 +78,5 @@ export class AppController {
     } catch (error) {
       return error;
     }
-  }
-
-  @ApiTags('login')
-  @ApiParam({ name: 'user', type: PickType(User, ['username', 'password']) })
-  @UseGuards(LocalAuthGuard)
-  @Post('auth/login')
-  async login(
-    @Req() req: Request,
-    @Res({ passthrough: true }) response: Response,
-  ) {
-    const userData = await this.authService.login(req.user);
-    response.cookie('jwt', userData.access_token, {
-      sameSite: 'none',
-      secure: true,
-      domain: 'nicolas.zone',
-    });
-    return userData;
-  }
-
-  @ApiTags('files')
-  @ApiParam({ name: 'file', type: 'File' })
-  @Post('/file')
-  @UseInterceptors(FileInterceptor('file'))
-  createFile(@UploadedFile() file) {
-    const fsyst = Storage.disk('test');
-    console.log(file);
-
-    fsyst.put('/' + file.originalname, file.buffer);
   }
 }

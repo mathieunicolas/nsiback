@@ -4,6 +4,7 @@
 
 # sous-dossier pour les essais fs
 /files
+*.sqlite
 
 # Logs
 logs
