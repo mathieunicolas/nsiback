@@ -16,7 +16,7 @@ export class AuthService {
       username: tmp['cas-user'],
       sub: tmp['cas-attributes']['cas-userAttributes']['id'],
       firstName: tmp['cas-attributes']['cas-userAttributes']['firstName'],
-      isTeacher: tmp['cas-attributes']['cas-userAttributes']['isTeacher'],
+      type: tmp['cas-attributes']['cas-userAttributes']['type'],
       classes: tmp['cas-attributes']['cas-userAttributes']['classes'],
       bday: tmp['cas-attributes']['cas-userAttributes']['birthDate'],
     };
