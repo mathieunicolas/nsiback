@@ -9,6 +9,21 @@ export class User {
   username: string;
 
   @Column()
+  firstName: string;
+
+  @Column({ nullable: true })
+  lastNAme: string;
+
+  @Column()
+  type: string;
+
+  @Column()
+  classes: string;
+
+  @Column()
+  bday: string;
+
+  @Column()
   entId: string;
 
   @Column({ default: 0 })

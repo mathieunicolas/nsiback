@@ -27,7 +27,12 @@ export class UsersService {
   }
 
   async create(user: User): Promise<User> {
-    return this.usersRepository.save(user);
+    const existingUser = await this.findOneByUsername(user.username);
+    if (existingUser) {
+      return existingUser;
+    } else {
+      return this.usersRepository.save(user);
+    }
   }
 
   async patch(user: Partial<User>): Promise<void> {

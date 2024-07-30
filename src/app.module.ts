@@ -4,6 +4,8 @@ import { DataSource } from 'typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
+import { UsersController } from './users/users.controller';
+import { UsersService } from './users/users.service';
 import { User } from './users/user.entity';
 import { ActivitiesModule } from './activity/activities.module';
 import { Activity } from './activity/activity.entity';
@@ -31,8 +33,8 @@ import { StorageModule } from '@squareboat/nest-storage';
     ActivitiesModule,
     AuthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, UsersController],
+  providers: [AppService, UsersService],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}

@@ -10,7 +10,8 @@ import {
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
-import { ApiParam, ApiTags, PickType } from '@nestjs/swagger';
+import { UsersService } from './users/users.service';
+import { ApiCookieAuth, ApiParam, ApiTags, PickType } from '@nestjs/swagger';
 import { Response, Request } from 'express';
 import { ofetch } from 'ofetch';
 import { XMLParser } from 'fast-xml-parser';
@@ -26,6 +27,7 @@ export class AppController {
   constructor(
     private readonly appService: AppService,
     private authService: AuthService,
+    private usersService: UsersService,
   ) {}
 
   @Get()
@@ -48,14 +50,20 @@ export class AppController {
       secure: true,
       domain: 'nsi.rocks',
     });
+    // TODO
+    // ICi, intégrer une vérification de l'existence de l'utilisateur dans la base de données
+    // Si l'utilisateur n'existe pas, le créer
+    // Si l'utilisateur existe, le mettre à jour avec les nouvelles informations si nécessaire
+    // Il faut par contre modifier le service pour qu'il renvoie le token ET les infos brutes de l'utilisateur
     return jwtCAS;
   }
 
+  @ApiCookieAuth()
   @UseGuards(JwtAuthGuard)
   @Get('/castest')
   async findAll(@Req() req) {
-    console.log(req.user);
-
+    // console.log(req.user);
+    this.usersService.create({ ...req.user, entId: req.user.sub });
     return req.user;
   }
 
