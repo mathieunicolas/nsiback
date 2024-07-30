@@ -7,11 +7,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.use(cookieParser());
-  app.enableCors({
+  /*app.enableCors({
     origin: 'http://localhost:3000', // Remplacer par l'URL de votre frontend
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // Si vous utilisez des cookies
-  });
+  });*/
 
   const config = new DocumentBuilder()
     .setTitle('NSI Rocks !')
@@ -22,6 +22,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3001);
+  await app.listen(3000);
 }
 bootstrap();
